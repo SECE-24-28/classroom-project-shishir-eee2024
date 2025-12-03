@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+
+   
+@keyframes growBox{
+    0%{
+        transform: initial-scale(1);
+        width: 100px;
+        height: 100px;
+    }
+    50%{
+        transform: scale(1.5);
+        height: 100px;
+        width: 100px;
+    }
+   
+    100%{
+        transform: scale(1);
+        height: 100px;
+        width: 100px;
+    }
+}
+
+.heart{
+    border: 2;
+    color: red;
+    font-size: 100px;
+    margin: 50px;
+    animation-name: growBox;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+</style>
+
+</head>
+<body>
+    <div class="heart">&#10084</div> 
+</body>
+</html>

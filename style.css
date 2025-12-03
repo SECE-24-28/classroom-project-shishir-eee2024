@@ -1,0 +1,51 @@
+
+@keyframes growBox{
+    0%{
+width: 30px;
+        height: 30px;
+    }
+    50%{
+        background-color: aqua;
+    }
+    100%{
+        height: 200px;
+        width: 200px;
+    }
+}
+
+@keyframes rotate{
+from{
+    transform: rotate(0deg);
+}
+to{
+    transform: rotate(360deg);
+    background-color: yellow;
+}
+}
+.box{
+    width: 100px;
+    height: 100px;
+    margin-top: 30px;
+    background-color: red;
+    animation-name: growBox;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.box1{
+    width: 100px;
+    height: 100px;
+    margin-left: 200px;
+    background-color: red;
+    animation: rotate 1s infinite;
+}
+
+.box2{
+    width: 100px;
+    height: 100px;
+    margin-left: 300px;
+    background-color: red;
+    animation-name: growBox;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
