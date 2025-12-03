@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cinerent Vidaura</title>
+  <!-- Stylish Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0; padding: 0; font-family: Arial, sans-serif;
+      height: 100%; width: 100%; color: #fff; background: #000;
+      overflow: hidden;
+    }
+    video.bg {
+      position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%;
+      object-fit: cover; z-index: -1;
+    }
+    .overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; flex-direction: column;
+    }
+    header {
+      padding: 20px; text-align: center;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 3em; font-weight: 700;
+      color: #ff80ff; text-shadow: 0 0 15px #ff4dff, 0 0 30px #ff99ff;
+      background: rgba(0,0,0,0.5);
+    }
+    .main { flex: 1; display: flex; overflow: hidden; }
+    .sidebar {
+      width: 250px; background: rgba(0,0,0,0.5); padding: 15px; overflow-y: auto;
+    }
+    .profile { display: flex; align-items: center; margin-bottom: 20px; }
+    .avatar {
+      width: 50px; height: 50px; border-radius: 50%; background: #888;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2em; margin-right: 10px;
+    }
+    .category-list button, .chip {
+      display: block; margin: 5px 0; padding: 8px; width: 100%;
+      background: #222; border: none; color: #fff; text-align: left; cursor: pointer;
+      border-radius: 6px;
+    }
+    .chip { display: inline-block; width: auto; }
+    .category-list button:hover, .chip:hover { background: #444; }
+    .content { flex: 1; overflow-y: auto; padding: 20px; }
+    .search-bar { margin-bottom: 20px; }
+    .search-bar input {
+      width: 100%; padding: 10px; border-radius: 8px; border: none;
+    }
+    .video-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+    .video-card {
+      background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .video-card img {
+      width: 100%; height: 100px; object-fit: cover;
+    }
+    .video-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+    .video-info h4 { margin: 0; font-size: 1em; flex: none; }
+    .video-info p { margin: 2px 0; font-size: 0.8em; }
+    .video-info .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+    .auth-panel {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px;
+    }
+    .auth-panel input {
+      display: block; margin: 5px 0; padding: 8px; border-radius: 6px; border: none; width: 200px;
+    }
+    .auth-panel button {
+      padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer;
+      background: #ff80ff; color: #fff; font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Flower Animation Video -->
+  <video class="bg" autoplay muted loop>
+    <source src="https://cdn.pixabay.com/vimeo/275625473/flower-17496.mp4?width=1280&hash=afef0b3a47cbbcc27fef11373c6329f93d0e7fa9" type="video/mp4">
+  </video>
+
+  <div class="overlay">
+    <header>Cinerent Vidaura</header>
+    <div class="main">
+      <div class="sidebar">
+        <div class="profile">
+          <div class="avatar" id="avatar">?</div>
+          <span id="userName">Guest</span>
+        </div>
+        <h3>Categories</h3>
+        <div class="category-list" id="categoryList"></div>
+        <h3>Quick Filters</h3>
+        <div><button class="chip" onclick="setQuick('recent')">Recent</button></div>
+        <div><button class="chip" onclick="setQuick('top')">Top Rated</button></div>
+        <div><button class="chip" onclick="setQuick('action')">Action</button></div>
+      </div>
+      <div class="content">
+        <div class="search-bar"><input id="globalSearch" placeholder="Search videos..."/></div>
+        <div><strong>Total videos:</strong> <span id="countLabel"></span></div>
+        <div class="video-grid" id="videoGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth -->
+  <div class="auth-panel" id="authPanel">
+    <h3 id="authTitle">Welcome — Login</h3>
+    <input id="userInput" placeholder="Username"/>
+    <input id="passInput" type="password" placeholder="Password"/>
+    <button id="authBtn" onclick="handleAuth()">Login</button>
+    <p><a href="#" onclick="toggleAuthMode()" id="toggleAuth">Don't have account? Sign up</a></p>
+  </div>
+
+  <script>
+    /***** Dataset with simple static images *****/
+    const categories = ["Education", "Comedy", "Thriller", "Drama", "Action", "Romance"];
+    const sampleVideos = {
+      "Education": [
+        { title: "Learn Python Basics", thumb: "https://via.placeholder.com/300x200/2a9d8f/ffffff?text=Python" },
+        { title: "World History 101", thumb: "https://via.placeholder.com/300x200/e9c46a/000000?text=History" },
+        { title: "Quantum Physics Simplified", thumb: "https://via.placeholder.com/300x200/264653/ffffff?text=Physics" },
+        { title: "Mastering Algebra", thumb: "https://via.placeholder.com/300x200/f4a261/000000?text=Algebra" },
+        { title: "Introduction to AI", thumb: "https://via.placeholder.com/300x200/2a9d8f/ffffff?text=AI" },
+        { title: "Learn JavaScript", thumb: "https://via.placeholder.com/300x200/e76f51/ffffff?text=JS" },
+        { title: "Geography of the World", thumb: "https://via.placeholder.com/300x200/457b9d/ffffff?text=Geography" },
+        { title: "Chemistry Reactions", thumb: "https://via.placeholder.com/300x200/f1faee/000000?text=Chemistry" },
+        { title: "English Grammar Basics", thumb: "https://via.placeholder.com/300x200/ffb703/000000?text=English" },
+        { title: "Economics for Beginners", thumb: "https://via.placeholder.com/300x200/219ebc/ffffff?text=Economics" }
+      ],
+      "Comedy": [
+        { title: "The Laugh Club", thumb: "https://via.placeholder.com/300x200/f72585/ffffff?text=Laugh" },
+        { title: "Stand-Up Nights", thumb: "https://via.placeholder.com/300x200/3a0ca3/ffffff?text=StandUp" },
+        { title: "Office Pranks", thumb: "https://via.placeholder.com/300x200/7209b7/ffffff?text=Pranks" },
+        { title: "Family Humor", thumb: "https://via.placeholder.com/300x200/4cc9f0/000000?text=Family" },
+        { title: "Comedy Circus", thumb: "https://via.placeholder.com/300x200/f72585/ffffff?text=Circus" },
+        { title: "Late Night Laughs", thumb: "https://via.placeholder.com/300x200/4361ee/ffffff?text=Night+Comedy" },
+        { title: "Friends Reunion", thumb: "https://via.placeholder.com/300x200/4895ef/ffffff?text=Friends" },
+        { title: "Cartoon Specials", thumb: "https://via.placeholder.com/300x200/560bad/ffffff?text=Cartoon" },
+        { title: "Comedy Awards", thumb: "https://via.placeholder.com/300x200/7209b7/ffffff?text=Awards" },
+        { title: "Laugh Till You Drop", thumb: "https://via.placeholder.com/300x200/f72585/ffffff?text=Laughs" }
+      ],
+      "Thriller": [
+        { title: "The Silent Chase", thumb: "https://via.placeholder.com/300x200/000000/ffffff?text=Chase" },
+        { title: "Nightfall Secrets", thumb: "https://via.placeholder.com/300x200/14213d/ffffff?text=Nightfall" },
+        { title: "Hidden Truth", thumb: "https://via.placeholder.com/300x200/1d3557/ffffff?text=Truth" },
+        { title: "The Last Witness", thumb: "https://via.placeholder.com/300x200/000000/ffffff?text=Witness" },
+        { title: "Echoes in the Dark", thumb: "https://via.placeholder.com/300x200/22223b/ffffff?text=Echoes" },
+        { title: "Bloodline", thumb: "https://via.placeholder.com/300x200/000000/ffffff?text=Bloodline" },
+        { title: "Edge of Fear", thumb: "https://via.placeholder.com/300x200/2b2d42/ffffff?text=Fear" },
+        { title: "Shattered Glass", thumb: "https://via.placeholder.com/300x200/495057/ffffff?text=Shattered" },
+        { title: "Mortal Secrets", thumb: "https://via.placeholder.com/300x200/212529/ffffff?text=Secrets" },
+        { title: "The Blackout", thumb: "https://via.placeholder.com/300x200/000000/ffffff?text=Blackout" }
+      ]
+      // You can continue similarly for Drama, Action, Romance…
+    };
+
+    /***** Generate flat list of videos with metadata *****/
+    let videos = [];
+    for (let cat of categories) {
+      (sampleVideos[cat] || []).forEach((v, idx) => {
+        videos.push({
+          title: v.title,
+          category: cat,
+          year: 2015 + (idx % 8),
+          rating: (Math.random() * 2 + 3).toFixed(1),
+          thumb: v.thumb
+        });
+      });
+    }
+
+    const videoGrid = document.getElementById("videoGrid");
+    const countLabel = document.getElementById("countLabel");
+    const globalSearch = document.getElementById("globalSearch");
+    const categoryList = document.getElementById("categoryList");
+
+    function renderCategoryButtons() {
+      categoryList.innerHTML = "";
+      categories.forEach(c => {
+        const btn = document.createElement("button");
+        btn.textContent = c;
+        btn.onclick = () => {
+          const filtered = videos.filter(v => v.category === c);
+          renderVideos(filtered);
+          countLabel.textContent = filtered.length;
+        };
+        categoryList.appendChild(btn);
+      });
+    }
+
+    function renderVideos(list) {
+      videoGrid.innerHTML = "";
+      list.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "video-card";
+        const img = document.createElement("img");
+        img.src = v.thumb;
+        const info = document.createElement("div");
+        info.className = "video-info";
+        const h4 = document.createElement("h4");
+        h4.textContent = v.title;
+        const p = document.createElement("p");
+        p.textContent = v.category + " • " + v.year;
+        const foot = document.createElement("div");
+        foot.className = "foot";
+        foot.innerHTML = `<span>⭐ ${v.rating}</span><button onclick="alert('Renting ${v.title}')">Rent</button>`;
+        info.appendChild(h4); info.appendChild(p); info.appendChild(foot);
+        card.appendChild(img); card.appendChild(info);
+        videoGrid.appendChild(card);
+      });
+    }
+
+    function setQuick(type) {
+      if (type === 'recent') renderVideos(videos.slice(-5));
+      if (type === 'top') renderVideos(videos.sort((a,b)=>b.rating-a.rating).slice(0,5));
+      if (type === 'action') renderVideos(videos.filter(v=>v.category==="Action"));
+    }
+
+    /***** Auth Logic *****/
+    const users = {};
+    let signupMode = false;
+    const authPanel = document.getElementById("authPanel");
+    const userInput = document.getElementById("userInput");
+    const passInput = document.getElementById("passInput");
+    const authBtn = document.getElementById("authBtn");
+    const toggleAuth = document.getElementById("toggleAuth");
+    const authTitle = document.getElementById("authTitle");
+    const avatar = document.getElementById("avatar");
+    const userNameLabel = document.getElementById("userName");
+
+    function handleAuth() {
+      const u = userInput.value.trim(); const p = passInput.value;
+      if (!u || !p) { alert("Please fill all fields"); return; }
+      if (signupMode) {
+        if (users[u]) { alert("User already exists"); return; }
+        users[u] = p; alert("Signed up! Please login."); toggleAuthMode();
+      } else {
+        if (users[u] && users[u] === p) {
+          userNameLabel.textContent = u;
+          avatar.textContent = u[0].toUpperCase();
+          authPanel.style.display = 'none';
+        } else { alert("Invalid credentials"); }
+      }
+    }
+
+    function toggleAuthMode() {
+      signupMode = !signupMode;
+      if (signupMode) {
+        authTitle.textContent = "Sign Up";
+        authBtn.textContent = "Sign Up";
+        toggleAuth.textContent = "Already have account? Login";
+      } else {
+        authTitle.textContent = "Welcome — Login";
+        authBtn.textContent = "Login";
+        toggleAuth.textContent = "Don't have account? Sign up";
+      }
+    }
+
+    renderCategoryButtons();
+    renderVideos(videos);
+    countLabel.textContent = videos.length;
+  </script>
+</body>
+</html>
