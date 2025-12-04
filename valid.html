@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Password Generator</title>
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #4FC3F7, #0288D1);
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #111827;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      width: 360px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: #111827;
+    }
+
+    .password-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #f3f4f6;
+    }
+
+    .password-box {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #111827;
+      outline: none;
+    }
+
+    .copy-btn {
+      background-color: #0288D1;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 20px;
+    }
+
+    .section {
+      margin-bottom: 16px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    .slider {
+      width: 100%;
+      accent-color: #0288D1;
+    }
+
+    .checkbox-group {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .checkbox-item {
+      background-color: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #111827;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      accent-color: #0288D1;
+    }
+
+    .generate-btn {
+      width: 100%;
+      background-color: #0288D1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Password Generator</h1>
+
+    <div class="password-row">
+      <input type="text" class="password-box" value=")hKkpyvC0E" readonly />
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="section">
+      <div class="label-row">
+        <span>Password length (4–20)</span>
+        <span id="lenVal">10</span>
+      </div>
+      <input type="range" min="4" max="20" value="10" class="slider" id="lengthSlider" />
+    </div>
+
+    <div class="checkbox-group">
+      <label class="checkbox-item">
+        <span>Include lowercase (a–z)</span>
+        <input type="checkbox" checked />
+      </label>
+      <label class="checkbox-item">
+        <span>Include uppercase (A–Z)</span>
+        <input type="checkbox" checked />
+      </label>
+      <label class="checkbox-item">
+        <span>Include numbers (0–9)</span>
+        <input type="checkbox" checked />
+      </label>
+      <label class="checkbox-item">
+        <span>Include symbols (@#!$...)</span>
+        <input type="checkbox" checked />
+      </label>
+    </div>
+
+    <button class="generate-btn">Generate</button>
+</div>
+
+<script>
+  const slider = document.getElementById("lengthSlider");
+  const lenVal = document.getElementById("lenVal");
+
+  slider.addEventListener("input", () => {
+    lenVal.textContent = slider.value;
+  });
+</script>
+</body>
+</html>
