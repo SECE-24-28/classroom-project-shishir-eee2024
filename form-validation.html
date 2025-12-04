@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Form</title>
+</head>
+<body>
+    <h2>Simple Form</h2>
+    <form id="myForm">
+        <label>Name:</label>
+        <input type="text" id="name" placeholder="Enter your name">
+        <br><br>
+        
+        <label>Email:</label>
+        <input type="text" id="email" placeholder="Enter your email">
+        <br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="message"></p>
+
+<script>
+const form = document.getElementById("myForm");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    if (name === "") {
+        message.style.color = "red";
+        message.innerText = "Name should not be empty!";
+    } 
+    else if (email === "") {
+        message.style.color = "red";
+        message.innerText = "Email should not be empty!";
+    } 
+    else if (!email.includes("@")) {
+        message.style.color = "red";
+        message.innerText = "Please enter a valid email!";
+    } 
+    else {
+        message.style.color = "green";
+        message.innerText = "Thank you! Form submitted successfully";
+    }
+});
+</script>
+
+</body>
+</html>

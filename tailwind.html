@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
 
-    <h1 class="text-xl font-bold text-white bg-blue-500 px-10 h-10 py-1 ">MyWebsite</h1>
-    
-  <h2 class="text-center font-bold text-4xl mt-10 mb-3">Welcome to Our Website</h2>
-  <p class="text-md text-center">Discover amazing features and services tailored for you</p>
-         <img src="lock.jpg" class="w-125 h-100 mx-auto">           
+  <header class="flex justify-between items-center bg-blue-500 text-white px-10 h-12">
+    <h1 class="text-xl font-bold">MyWebsite</h1>
+
+    <div class=" space-x-6">
+      <a href="https://web.dev/learn/html/links/" class="hover:text-red-200">Home</a>
+      <a href="https://thekranes.com/" class="hover:text-red-200">Services</a>
+      <button class="bg-white text-blue-500 font-semibold px-4 py-1 rounded hover:bg-gray-100">
+        Login
+      </button>
+    </div>
+  </header>
+
+  <h2 class="text-center font-bold text-4xl mt-10">Welcome to Our Website</h2>
+  <p class="text-md text-center mb-2">Discover amazing features and services tailored for you</p>
+  <img src="lock.jpg" class="w-125 h-100 mx-auto">
+
 </body>
+
+
+
 </html>
