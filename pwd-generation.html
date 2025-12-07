@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg,#1f2937,#111827);
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+        }
+
+        .card{
+            background:#1f2937;
+            width:100%;
+            max-width:400px;
+            padding:25px;
+            border-radius:16px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:20px;
+            font-size:22px;
+            letter-spacing:0.5px;
+        }
+
+        .row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin:10px 0;
+            font-size:14px;
+        }
+
+        .row label{
+            margin-left:10px;
+            flex:1;
+        }
+
+        input[type="checkbox"]{
+            width:18px;
+            height:18px;
+            accent-color:#7c3aed;
+        }
+
+        input[type="number"]{
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border-radius:10px;
+            border:none;
+            outline:none;
+            font-size:14px;
+        }
+
+        .result{
+            width:100%;
+            margin-top:10px;
+            padding:12px;
+            border-radius:12px;
+            border:none;
+            font-size:14px;
+            background:#111827;
+            color:#7c3aed;
+            outline:none;
+        }
+
+        .controls{
+            display:flex;
+            gap:10px;
+            margin-top:15px;
+        }
+
+        button{
+            flex:1;
+            padding:12px;
+            border:none;
+            border-radius:12px;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.2s ease;
+        }
+
+        #generate{
+            background:#7c3aed;
+            color:white;
+        }
+
+        #generate:hover{
+            background:#6d28d9;
+        }
+
+        #clear{
+            background:#ef4444;
+            color:white;
+        }
+
+        #clear:hover{
+            background:#dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Simple Password Generator</h1>
+
+    <div class="row">
+        <input id="upper" type="checkbox" checked>
+        <label>Include A-Z (Uppercase)</label>
+    </div>
+
+    <div class="row">
+        <input id="lower" type="checkbox" checked>
+        <label>Include a-z (Lowercase)</label>
+    </div>
+
+    <div class="row">
+        <input id="numbers" type="checkbox" checked>
+        <label>Include 0-9 (Numbers)</label>
+    </div>
+
+    <div class="row">
+        <input id="symbols" type="checkbox" checked>
+        <label>Include @ # $ (Symbols)</label>
+    </div>
+
+    <div class="row">
+        <label>Length:</label>
+    </div>
+    <input type="number" id="length" placeholder="Enter length (e.g. 12)">
+
+    <div class="row">
+        <input class="result" id="output" placeholder="Your password will appear" readonly>
+    </div>
+
+    <div class="controls">
+        <button id="generate">Generate</button>
+        <button id="clear">Clear</button>
+    </div>
+
+</div>
+
+<script>
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const symbols = "@#$%!^&";
+
+    function generate(){
+        const parts=[];
+        if(document.getElementById("upper").checked) parts.push(upper);
+        if(document.getElementById("lower").checked) parts.push(lower);
+        if(document.getElementById("numbers").checked) parts.push(numbers);
+        if(document.getElementById("symbols").checked) parts.push(symbols);
+
+        const length = parseInt(document.getElementById("length").value);
+
+        if(parts.length===0) return alert("Please select at least one character set.");
+        if(!length || length<=0) return alert("Please enter a valid length.");
+
+        const charset = parts.join('');
+        let out ='';
+
+        function randomIndex(max){
+            return Math.floor(Math.random()*max);
+        }
+
+        for(let i=0;i<length;i++){
+            out+=charset[randomIndex(charset.length)];
+        }
+        document.getElementById("output").value=out;
+    }
+
+    document.getElementById("generate").addEventListener("click", generate);
+
+    document.getElementById("clear").addEventListener("click", () => {
+        document.getElementById("output").value = "";
+    });
+</script>
+
+</body>
+</html>
